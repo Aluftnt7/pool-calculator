@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Time Difference Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1>מחשבון הפול הבלתי נלאה</h1>
+    <form>
+      <label for="time1">:שעת התחלה</label>
+      <input type="time" id="time1" name="time1" oninput="onTime1Change()" required>
+
+      <label for="time2">:שעת סיום</label>
+      <input type="time" id="time2" name="time2" oninput="onTime2Change()" required>
+
+      <button type="submit" id="submit" class="btn btn-white btn-animate">חשבן אותי</button>
+      <p id="result"></p>
+    </form>
+
+
+    <script>
+      function timeDifferenceInMinutes(time1, time2) {
+        const time1Minutes = timeToMinute(time1);
+        const time2Minute = timeToMinute(time2);
+        let diffInMinutes = time2Minute - time1Minutes;
+        if(diffInMinutes < 0){
+            diffInMinutes += 24*60
+        }
+        return diffInMinutes
+      }
+
+      function timeToMinute(time){
+        const [hours, minutes] = time.split(':');
+        return parseInt(hours, 10) * 60 + parseInt(minutes, 10);
+      }
+      var timerId = null; // variable to store timeout ID
+
+      function onTime1Change(){
+        var time1 = document.getElementById("time1").value;
+        var regex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/; // regex to validate time format
+        clearTimeout(timerId); // clear previous timeout
+        timerId = setTimeout(function() { // set new timeout
+        if (regex.test(time1)) {
+            document.getElementById("time2").focus();
+      }
+    }, 500); // timeout duration in milliseconds
+      }
+
+    function onTime2Change() {
+        var time2 = document.getElementById("time2").value;
+        var regex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/; // regex to validate time format
+        clearTimeout(timerId); // clear previous timeout
+        timerId = setTimeout(function() { // set new timeout
+        if (regex.test(time2)) {
+            document.getElementById("submit").focus();
+      }
+    }, 500); // timeout duration in milliseconds
+      }
+
+      const form = document.querySelector('form');
+      const result = document.querySelector('#result');
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const time1 = form.elements.time1.value;
+        const time2 = form.elements.time2.value;
+        const differenceInMinutes = timeDifferenceInMinutes(time1, time2);
+        result.textContent = `אהלן ולהלן - ${differenceInMinutes} דק' ושקלקלים`;
+      });
+    </script>
+  </body>
+</html>
